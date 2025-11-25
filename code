@@ -1,1 +1,41 @@
-
+DATAFILE = "AirQuality_Monitor_sample.csv"
+def load_data(path):
+ # TODO: Load CSV with pandas
+ # TODO: Convert Date column to datetime
+ pass
+def inspect(df):
+ # TODO: Print head, info, basic stats
+ pass
+def clean_data(df):
+ # TODO: Handle missing values using median or drop
+ pass
+def compute_summary(df):
+ # TODO: Compute per-station summary (means)
+ pass
+def find_anomalies(df):
+ # TODO: Flag rows with PM2.5 > 25 μg/m³
+ pass
+def create_plots(df):
+ # TODO: Create and save:
+ # 1) pm25_timeseries.png
+ # 2) hist_pm25.png
+ # 3) box_pm25.png
+ # 4) scatter_pm10_no2.png
+ pass
+def make_animation(df):
+ # TODO: Implement animation showing PM2.5 progression over time
+ pass
+def export_results(df):
+ # TODO: Save anomalies.csv
+ # TODO: Save summary_by_station.csv
+ pass
+if __name__ == "__main__":
+ df = load_data(DATAFILE)
+ inspect(df)
+ df = clean_data(df)
+ compute_summary(df)
+ find_anomalies(df)
+ create_plots(df)
+ make_animation(df)
+ export_results(df)
+ print("All tasks completed — continue refining for submission!"
