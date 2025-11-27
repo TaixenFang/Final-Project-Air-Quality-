@@ -1,8 +1,24 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from matplotlib import animation
+
 DATAFILE = "AirQuality_Monitor_sample.csv"
-def load_data(path): # sJHAEFP
+
+def load_data(path):
  # TODO: Load CSV with pandas
  # TODO: Convert Date column to datetime
- pass
+    
+    df = pd.read_csv(path)
+    
+    df['Date'] = pd.to_datetime(df['Date'])
+    
+    return df
+
+print(load_data(r'C:\Users\Admin\AppData\Local\Temp\ef4c8042-1483-4448-b8e6-c1de236b3183_1AirQualityTeamProjectQues.zip.183\1AirQualityTeamProjectQues\AirQuality_Monitor_sample.csv'))
+ 
+
 def inspect(df):
  # TODO: Print head, info, basic stats
  pass
