@@ -6,22 +6,36 @@ from matplotlib import animation
 
 DATAFILE = "AirQuality_Monitor_sample.csv"
 
+path = r'C:\Users\Admin\AppData\Local\Temp\706d893c-8225-484c-ae38-9fd3e4a1d534_1AirQualityTeamProjectQues.zip.534\1AirQualityTeamProjectQues\AirQuality_Monitor_sample.csv'
+
+df = pd.read_csv(path)
+
 def load_data(path):
  # TODO: Load CSV with pandas
  # TODO: Convert Date column to datetime
-    
-    df = pd.read_csv(path)
     
     df['Date'] = pd.to_datetime(df['Date'])
     
     return df
 
-print(load_data(r'C:\Users\Admin\AppData\Local\Temp\ef4c8042-1483-4448-b8e6-c1de236b3183_1AirQualityTeamProjectQues.zip.183\1AirQualityTeamProjectQues\AirQuality_Monitor_sample.csv'))
- 
+print(load_data(path))
+
 
 def inspect(df):
- # TODO: Print head, info, basic stats
- pass
+# TODO: Print head, info, basic stats
+
+    print("Head: ")
+    print(df.head(0)) # Not sure about this
+
+    print ("Info: ")
+    df.info()
+
+    print("Basic Stats: ")
+    print(df.describe())
+
+inspect(df)
+
+
 def clean_data(df):
  # TODO: Handle missing values using median or drop
  pass
@@ -54,4 +68,4 @@ if __name__ == "__main__":
  create_plots(df)
  make_animation(df)
  export_results(df)
- print("All tasks completed — continue refining for submission!"
+ print("All tasks completed — continue refining for submission!")
