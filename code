@@ -4,68 +4,109 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib import animation
 
-DATAFILE = "AirQuality_Monitor_sample.csv"
 
-path = r'C:\Users\Admin\AppData\Local\Temp\706d893c-8225-484c-ae38-9fd3e4a1d534_1AirQualityTeamProjectQues.zip.534\1AirQualityTeamProjectQues\AirQuality_Monitor_sample.csv'
+DATAFILE = "AirQuality_Monitor_sample.csv"  # File name
 
-df = pd.read_csv(path)
+path = r'C:\Users\Taixen\PycharmProjects\PythonProject3\AirQuality_Monitor_sample.csv' # File path
 
 def load_data(path):
- # TODO: Load CSV with pandas
- # TODO: Convert Date column to datetime
-    
-    df['Date'] = pd.to_datetime(df['Date'])
-    
-    return df
+    # TODO: Load CSV with pandas
+    # TODO: Convert Date column to datetime
+    df = pd.read_csv(path) # Load data from a CSV file into Pandas Dataframe for analysis.
+    df['Date'] = pd.to_datetime(df['Date']) # This function converts the date column to datetime format to make the graph more organized.
 
-print(load_data(path))
-
+    return df   # Return the dataframe (the date)
 
 def inspect(df):
-# TODO: Print head, info, basic stats
+    # TODO: Print head, info, basic stats
 
     print("Head: ")
-    print(df.head(0)) # Not sure about this
+    print(df.head(0))  # Not sure about this
 
-    print ("Info: ")
+    print("Info: ")
     df.info()
 
     print("Basic Stats: ")
     print(df.describe())
 
-inspect(df)
-
-
 def clean_data(df):
- # TODO: Handle missing values using median or drop
- pass
+    # TODO: Handle missing values using median or drop
+    numeric_columns = ['PM2.5', 'PM10', 'NO2']
+    for column in numeric_columns:
+        if column not in df.columns:
+            df[column].fillna(df[column].median(), inplace=True)
+
+    df.dropna(subset=['PM2.5', 'Date'], inplace = True)
+    return df
+
 def compute_summary(df):
- # TODO: Compute per-station summary (means)
- pass
+    # TODO: Compute per-station summary (means)
+    if 'Station' in df.columns:
+        summary = df.groupby('Station').agg({
+            'PM2.5': ['mean', 'std', 'min', 'max'],
+            'PM10': 'mean',
+            'NO2': 'mean'
+        }).round(2)
+        print("Summary by Station:")
+        print(summary)
+        return summary
+    return None
+
 def find_anomalies(df):
- # TODO: Flag rows with PM2.5 > 25 μg/m³
- pass
+    # TODO: Flag rows with PM2.5 > 25 μg/m³
+    anomalies = df[df['PM2.5']>25]
+    print(f"Found {len(anomalies)} anomaly records (PM2.5>25)")
+    return anomalies
+
 def create_plots(df):
- # TODO: Create and save:
- # 1) pm25_timeseries.png
- # 2) hist_pm25.png
- # 3) box_pm25.png
- # 4) scatter_pm10_no2.png
- pass
+    # TODO: Create and save:
+
+    # 1) pm25_timeseries.png
+    plt.figure (figsize = (12,6))
+    sns.scatterplot(data=df, x="Date", y="PM2.5", hue="SiteID")
+    plt.title('PM2.5 Over Time')
+    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\pm25_timeseries.png")
+    plt.close()
+
+    # 2) hist_pm25.png
+    plt.figure(figsize=(10, 6))
+    sns.histplot(data=df, x="PM2.5 (µg/m³)", y="Frequency", hue="SiteID")
+    plt.title("Distribution of PM2.5 values")
+    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\hist_pm25.png")
+    plt.close()
+
+    # 3) box_pm25.png
+    plt.figure(figsize=(10, 6))
+    sns.boxplot(data=df, x="SiteID", y="PM2.5")
+    plt.title("PM2.5 Distribution by SiteID")
+    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\box_pm25.png")
+    plt.close()
+
+    # 4) scatter_pm10_no2.png
+    plt.figure(figsize=(10,6))
+    sns.scatterplot(data=df, x='PM10', y='NO2', hue='SiteID')
+    plt.title("PM10 vs NO2 by Station")
+    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\scatter_pm10_no2.png")
+    plt.close()
+
 def make_animation(df):
- # TODO: Implement animation showing PM2.5 progression over time
- pass
+    # TODO: Implement animation showing PM2.5 progression over time
+    pass
+
+
 def export_results(df):
- # TODO: Save anomalies.csv
- # TODO: Save summary_by_station.csv
- pass
+    # TODO: Save anomalies.csv
+    # TODO: Save summary_by_station.csv
+    pass
+
+
 if __name__ == "__main__":
- df = load_data(DATAFILE)
- inspect(df)
- df = clean_data(df)
- compute_summary(df)
- find_anomalies(df)
- create_plots(df)
- make_animation(df)
- export_results(df)
- print("All tasks completed — continue refining for submission!")
+    df = load_data(DATAFILE)
+    inspect(df)
+    df = clean_data(df)
+    compute_summary(df)
+    find_anomalies(df)
+    create_plots(df)
+    make_animation(df)
+    export_results(df)
+    print("All tasks completed — continue refining for submission!")
