@@ -41,16 +41,13 @@ def clean_data(df):
 
 def compute_summary(df):
     # TODO: Compute per-station summary (means)
-    if 'Station' in df.columns:
-        summary = df.groupby('Station').agg({
+    if 'StationID' in df.columns:
+        summary = df.groupby('StationID').agg({
             'PM2.5': ['mean', 'std', 'min', 'max'],
             'PM10': 'mean',
             'NO2': 'mean'
         }).round(2)
-        print("Summary by Station:")
-        print(summary)
         return summary
-    return None
 
 def find_anomalies(df):
     # TODO: Flag rows with PM2.5 > 25 μg/m³
@@ -91,14 +88,34 @@ def create_plots(df):
 
 def make_animation(df):
     # TODO: Implement animation showing PM2.5 progression over time
-    pass
+    daily = df.groupby("Date")["PM2.5"].mean().reset_index()
+    dates = daily["Date"].values
+    scores = daily["PM2.5"].values
 
+    fig,ax = plt.subplots(figsize=(6,4))
+    ax.set_xlim(min(dates),max(dates))
+    ax.set_ylim(min(scores)+2)
+    line, = ax.plot([],[],'ro')
+    print(line)
+
+    def animate(i):
+        x = dates[:i]
+        y = scores[:i]
+        line.set_data(x,y)
+        ax.set_title(f"Day {i+1}")
+        return line,
+    anim = animation.FuncAnimation(
+        fig, animate, frames=len(dates), interval=250
+    )
+    plt.show()
+    anim.save(r"C:\Users\2491517\source\repos\PythonApplication1\PythonApplication1\PM2.5_animation.gif")
+    plt.close()
 
 def export_results(df):
     # TODO: Save anomalies.csv
     # TODO: Save summary_by_station.csv
-    df.to_csv(r"C:\Users\2491517\source\repos\PythonApplication1\PythonApplication1\summary_by_station.csv", index=False)
-
+    find_anomalies(df).to_csv(r"C:\Users\2491517\source\repos\PythonApplication1\PythonApplication1\anomalies.csv")
+    compute_summary(df).to_csv(r"C:\Users\2491517\source\repos\PythonApplication1\PythonApplication1\summary_by_station.csv")
 
 if __name__ == "__main__":
     df = load_data(DATAFILE)
