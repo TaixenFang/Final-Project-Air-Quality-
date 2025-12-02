@@ -7,7 +7,7 @@ from matplotlib import animation
 
 DATAFILE = "AirQuality_Monitor_sample.csv"  # File name
 
-path = r'C:\Users\Taixen\PycharmProjects\PythonProject3\AirQuality_Monitor_sample.csv' # File path
+path = r'C:\Users\2491517\source\repos\PythonApplication1\PythonApplication1\AirQuality_Monitor_sample.csv' # File path
 
 def load_data(path):
     # TODO: Load CSV with pandas
@@ -63,30 +63,30 @@ def create_plots(df):
 
     # 1) pm25_timeseries.png
     plt.figure (figsize = (12,6))
-    sns.scatterplot(data=df, x="Date", y="PM2.5", hue="SiteID")
+    sns.lineplot(data=df, x="Date", y="PM2.5", hue="StationID")
     plt.title('PM2.5 Over Time')
-    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\pm25_timeseries.png")
+    plt.savefig(r"C:\Users\2491517\source\repos\PythonApplication1\PythonApplication1\pm25_timeseries.png")
     plt.close()
 
     # 2) hist_pm25.png
     plt.figure(figsize=(10, 6))
-    sns.histplot(data=df, x="PM2.5 (µg/m³)", y="Frequency", hue="SiteID")
+    sns.histplot(data=df, x="PM2.5", stat = 'frequency', hue="StationID")
     plt.title("Distribution of PM2.5 values")
-    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\hist_pm25.png")
+    plt.savefig(r"C:\Users\2491517\source\repos\PythonApplication1\PythonApplication1\hist_pm25.png")
     plt.close()
 
     # 3) box_pm25.png
     plt.figure(figsize=(10, 6))
-    sns.boxplot(data=df, x="SiteID", y="PM2.5")
-    plt.title("PM2.5 Distribution by SiteID")
-    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\box_pm25.png")
+    sns.boxplot(data=df, x="StationID", y="PM2.5")
+    plt.title("PM2.5 Distribution by StationID")
+    plt.savefig(r"C:\Users\2491517\source\repos\PythonApplication1\PythonApplication1\box_pm25.png")
     plt.close()
 
     # 4) scatter_pm10_no2.png
     plt.figure(figsize=(10,6))
-    sns.scatterplot(data=df, x='PM10', y='NO2', hue='SiteID')
+    sns.scatterplot(data=df, x='PM10', y='NO2', hue='StationID')
     plt.title("PM10 vs NO2 by Station")
-    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\scatter_pm10_no2.png")
+    plt.savefig(r"C:\Users\2491517\source\repos\PythonApplication1\PythonApplication1\scatter_pm10_no2.png")
     plt.close()
 
 def make_animation(df):
@@ -97,7 +97,7 @@ def make_animation(df):
 def export_results(df):
     # TODO: Save anomalies.csv
     # TODO: Save summary_by_station.csv
-    pass
+    df.to_csv(r"C:\Users\2491517\source\repos\PythonApplication1\PythonApplication1\summary_by_station.csv", index=False)
 
 
 if __name__ == "__main__":
