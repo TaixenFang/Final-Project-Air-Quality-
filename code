@@ -21,13 +21,13 @@ def inspect(df):
     # TODO: Print head, info, basic stats
 
     print("Head: ")
-    print(df.head(0))  # Not sure about this
+    print(df.head(0))  # Prints no data rows, only the heading
 
     print("Info: ")
-    df.info()
+    df.info() # Prints the info related to data frame
 
     print("Basic Stats: ")
-    print(df.describe())
+    print(df.describe()) # Prints the statistics of the data frame
 
 def clean_data(df):
     # TODO: Handle missing values using median or drop
@@ -60,21 +60,21 @@ def create_plots(df):
 
     # 1) pm25_timeseries.png
     plt.figure (figsize = (12,6))
-    sns.lineplot(data=df, x="Date", y="PM2.5", hue="StationID")
-    plt.title('PM2.5 Over Time')
-    plt.savefig(r"C:\Users\2491517\source\repos\PythonApplication1\PythonApplication1\pm25_timeseries.png")
-    plt.close()
+    sns.lineplot(data=df, x="Date", y="PM2.5", hue="StationID") # Line graph, plot the PM2.5 vs the Date from the data file
+    plt.title('PM2.5 Over Time') #Title of the graph
+    plt.savefig(r"C:\Users\2491517\source\repos\PythonApplication1\PythonApplication1\pm25_timeseries.png") # Save the png fileon the computer files
+    plt.close() # Close the file
 
     # 2) hist_pm25.png
     plt.figure(figsize=(10, 6))
-    sns.histplot(data=df, x="PM2.5", stat = 'frequency', hue="StationID")
-    plt.title("Distribution of PM2.5 values")
-    plt.savefig(r"C:\Users\2491517\source\repos\PythonApplication1\PythonApplication1\hist_pm25.png")
-    plt.close()
+    sns.histplot(data=df, x="PM2.5", stat = 'frequency', hue="StationID") # Plot a histograph, frequency vs PM2.5 from the data file
+    plt.title("Distribution of PM2.5 values") # Title of the graph
+    plt.savefig(r"C:\Users\2491517\source\repos\PythonApplication1\PythonApplication1\hist_pm25.png") # Save the png on the computer files
+    plt.close() # Close the file
 
     # 3) box_pm25.png
     plt.figure(figsize=(10, 6))
-    sns.boxplot(data=df, x="StationID", y="PM2.5")
+    sns.boxplot(data=df, x="StationID", y="PM2.5") # Plot a
     plt.title("PM2.5 Distribution by StationID")
     plt.savefig(r"C:\Users\2491517\source\repos\PythonApplication1\PythonApplication1\box_pm25.png")
     plt.close()
