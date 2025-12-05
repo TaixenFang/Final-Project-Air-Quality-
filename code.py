@@ -86,7 +86,7 @@ def create_plots(df):
     plt.savefig(r"C:\Users\Admin\Downloads\scatter_pm10_no2.png") # Saves the graph as a png file on the computer 
     plt.close() # Close the file
 
-def make_animation(df):
+def make_animation(df): # TO BE FIXED!!!!!!!!!!!
     # TODO: Implement animation showing PM2.5 progression over time
     monthly = df.groupby("Date")["PM2.5"].mean().reset_index()
     dates = monthly["Date"].values
