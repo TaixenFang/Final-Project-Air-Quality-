@@ -4,16 +4,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib import animation
 
-
-DATAFILE = "AirQuality_Monitor_sample.csv"  # File name
-
 path = r"C:\Users\Admin\Downloads\AirQuality_Monitor_sample.csv" # File path
 
 def load_data(path):
     # TODO: Load CSV with pandas
     # TODO: Convert Date column to datetime
     df = pd.read_csv(path) # Load data from a CSV file into Pandas Dataframe for analysis.
-    df['Date'] = pd.to_datetime(df['Date']) # This function converts the date column to datetime format to make the graph more organized.
+    df['Date'] = pd.to_datetime(df['Date']) # This function converts the date column to datetime format to be able to perform operations related to date
 
     return df   # Return the dataframe (the date)
 
@@ -42,18 +39,18 @@ def clean_data(df):
 def compute_summary(df):
     # TODO: Compute per-station summary (means)
     if 'StationID' in df.columns:
-        summary = df.groupby('StationID').agg({
-            'PM2.5': ['mean', 'std', 'min', 'max'],
-            'PM10': 'mean',
-            'NO2': 'mean'
-        }).round(2)
-        return summary
+        summary = df.groupby('StationID').agg({ # Group each data by its StationID
+            'PM2.5': ['mean', 'std', 'min', 'max'], # Find the mean, standard deviation, minimum and maximum for PM2.5
+            'PM10': 'mean', # FInd the mean for PM10
+            'NO2': 'mean' # Find the mean for NO2
+        }).round(2) # Rounds to two decimal points
+        return summary # Return a table containing the requested data
 
 def find_anomalies(df):
     # TODO: Flag rows with PM2.5 > 25 μg/m³
-    anomalies = df[df['PM2.5']>25]
-    print(f"Found {len(anomalies)} anomaly records (PM2.5>25)")
-    return anomalies
+    anomalies = df[df['PM2.5']>25] # Makes a dataframe out of the PM2.5 data that is over 25
+    print(f"Found {len(anomalies)} anomaly records (PM2.5>25)") # Prints the number of anomalities, which is also the number of elements in the new anomalies dataframe
+    return anomalies # Returns the dataframe
 
 def create_plots(df):
     # TODO: Create and save:
@@ -92,10 +89,11 @@ def make_animation(df): # TO BE FIXED!!!!!!!!!!!
     dates = monthly["Date"].values
     scores = monthly["PM2.5"].values
 
-    fig,ax = plt.subplots(figsize=(6,4))
+    fig,ax = plt.subplots(figsize=(6,4)) 
     ax.set_xlim(min(dates),max(dates))
     ax.set_ylim(min(scores)+2)
-    line, = ax.plot([],[],'ro')
+    line, = ax.plot([],[],'-') 
+    
     print(line)
 
     def animate(i):
