@@ -1,3 +1,4 @@
+# Required libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,130 +9,175 @@ path = r"C:\Users\Taixen\PycharmProjects\PythonProject3\AirQuality_Monitor_sampl
 
 
 def load_data(path):
-    # TODO: Load CSV with pandas
-    # TODO: Convert Date column to datetime
-    df = pd.read_csv(path)  # Load data from a CSV file into Pandas Dataframe for analysis.
-    df['Date'] = pd.to_datetime(df[
-                                    'Date'])  # This function converts the date column to datetime format to be able to perform operations related to date
+    # Load data from a CSV file into Pandas Dataframe for analysis
+    df = pd.read_csv(path)
+    # This function converts the date column to datetime format to be able to perform operations related to date
+    df['Date'] = pd.to_datetime(df['Date'])
 
-    return df  # Return the dataframe (the date)
+    # Return the dataframe (the date)
+    return df
 
 
 def inspect(df):
-    # TODO: Print head, info, basic stats
 
+    # Prints no data rows, only the heading
     print("Head: ")
-    print(df.head(0))  # Prints no data rows, only the heading
+    print(df.head(0))
 
+    # Prints the info related to data frame
     print("Info: ")
-    df.info()  # Prints the info related to data frame
+    df.info()
 
+    # Prints the statistics of the data frame
     print("Basic Stats: ")
-    print(df.describe())  # Prints the statistics of the data frame
+    print(df.describe())
 
 
 def clean_data(df):
-    # TODO: Handle missing values using median or drop
+    # Defining the columns of pollution data that need cleaning
     numeric_columns = ['PM2.5', 'PM10', 'NO2']
+    # For loop checks if column exists in the DataFrame
     for column in numeric_columns:
-        if column not in df.columns:
+        if column in df.columns:
+            # Fills any missing values with median values
             df[column].fillna(df[column].median(), inplace=True)
-
+    # Removing rows where both the Date and PM2.5 levels are missing
     df.dropna(subset=['PM2.5', 'Date'], inplace=True)
     return df
 
 
 def compute_summary(df):
-    # TODO: Compute per-station summary (means)
     if 'StationID' in df.columns:
-        summary = df.groupby('StationID').agg({  # Group each data by its StationID
-            'PM2.5': ['mean', 'std', 'min', 'max'],  # Find the mean, standard deviation, minimum and maximum for PM2.5
-            'PM10': 'mean',  # FInd the mean for PM10
-            'NO2': 'mean'  # Find the mean for NO2
-        }).round(2)  # Rounds to two decimal points
-        return summary  # Return a table containing the requested data
+        # Group each data by its StationID
+        summary = df.groupby('StationID').agg({
+            # Find the mean, standard deviation, minimum and maximum for the PM2.5 pollutant
+            'PM2.5': ['mean', 'std', 'min', 'max'],
+            # FInd the mean for PM10
+            'PM10': 'mean',
+            # Find the mean for NO2
+            'NO2': 'mean'
+            # Rounds to two decimal points
+        }).round(2)
+        # Return a table containing the requested data
+        return summary
 
 
 def find_anomalies(df):
-    # TODO: Flag rows with PM2.5 > 25 μg/m³
-    anomalies = df[df['PM2.5'] > 25]  # Makes a dataframe out of the PM2.5 data that is over 25
+    # Creates a dataframe out of the PM2.5 data that is over 25
+    anomalies = df[df['PM2.5'] > 25]
+    # Prints the number of anomalies, which is also the number of elements in the new anomalies dataframe
     print(
-        f"Found {len(anomalies)} anomaly records (PM2.5>25)")  # Prints the number of anomalities, which is also the number of elements in the new anomalies dataframe
-    return anomalies  # Returns the dataframe
+        f"Found {len(anomalies)} anomaly records (PM2.5>25)")
+    # Returns a DataFrame containing anomalies
+    return anomalies
 
 
 def create_plots(df):
-    # TODO: Create and save:
+    # 1) PM2.5 Levels vs Time linegraph
 
-    # 1) pm25_timeseries.png
+    # Set graph size
     plt.figure(figsize=(12, 6))
-    sns.lineplot(data=df, x="Date", y="PM2.5",
-                 hue="StationID")  # Line graph, plot the PM2.5 vs the Date from the data file
-    plt.title('PM2.5 Over Time')  # Title of the graph
-    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\pm25_timeseries.png")  # Save the graph as a png file on the computer
-    plt.close()  # Close the file
+    # Using Seaborn, set DataFrame as data used for this graph, use Date & PM2.5 column values, use 'hue' to identify each linegraph
+    sns.lineplot(data=df, x="Date", y="PM2.5",hue="StationID")
+    # Title of the graph
+    plt.title('PM2.5 Over Time')
+    # Save the graph as a png image file
+    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\pm25_timeseries.png")
+    # Close the file
+    plt.close()
 
-    # 2) hist_pm25.png
-    plt.figure(figsize=(10, 6))
-    sns.histplot(data=df, x="PM2.5", stat='frequency',
-                 hue="StationID")  # Plot a histograph, frequency vs PM2.5 from the data file
-    plt.title("Distribution of PM2.5 values")  # Title of the graph
-    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\hist_pm25.png")  # Save the graph as a png file on the computer
-    plt.close()  # Close the file
+    # 2) PM2.5 pollutant histogram
 
-    # 3) box_pm25.png
+    # Set graph size
     plt.figure(figsize=(10, 6))
-    sns.boxplot(data=df, x="StationID", y="PM2.5")  # Plot a box plot PM2.5 vs Station ID from the datafile
-    plt.title("PM2.5 Distribution by StationID")  # Title of the graph
-    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\box_pm25.png")  # Saves the graph as a png file on the computer
-    plt.close()  # Close the file
+    # Using Seaborn, set DataFrame as data used for this graph, use only PM2.5 from the csv file, add a frequency stat for Y-Axis
+    sns.histplot(data=df, x="PM2.5", stat='frequency',hue="StationID")
+    # Title of the graph
+    plt.title("Distribution of PM2.5 values")
+    # Save the graph as a png image file
+    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\hist_pm25.png")
+    # Close the file
+    plt.close()
+
+    # 3) PM2.5 boxplot by station
+
+    # Set graph size
+    plt.figure(figsize=(10, 6))
+    # Using Seaborn, set DataFrame as data used for this graph, use StationID & PM2.5 columns to compare which stations recorded more or less pollutant levels
+    sns.boxplot(data=df, x="StationID", y="PM2.5")
+    # Title of the graph
+    plt.title("PM2.5 Distribution by StationID")
+    # Saves the graph as a png image file
+    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\box_pm25.png")
+    # Close the file
+    plt.close()
 
     # 4) scatter_pm10_no2.png
+
+    # Set graph size
     plt.figure(figsize=(10, 6))
-    sns.scatterplot(data=df, x='PM10', y='NO2', hue='StationID')  # Plots a NO2 vs PM10 scatterplot
-    plt.title("PM10 vs NO2 by Station")  # Title of the graph
-    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\scatter_pm10_no2.png")  # Saves the graph as a png file on the computer
-    plt.close()  # Close the file
+    # Using Seaborn, set DataFrame as data used for this graph, use PM10 & NO2 columns to compare which pollutant is more present
+    sns.scatterplot(data=df, x='PM10', y='NO2', hue='StationID')
+    # Title of the graph
+    plt.title("PM10 vs NO2 by Station")
+    # Saves the graph as a png image file
+    plt.savefig(r"C:\Users\Taixen\PycharmProjects\PythonProject3\scatter_pm10_no2.png")
+    # Close the file
+    plt.close()
 
 
 def make_animation(df):
-    # TODO: Implement animation showing PM2.5 progression over time
-    daily = df.groupby("Date")["PM2.5"].mean().reset_index()
-    dates = daily["Date"].values
-    scores = daily["PM2.5"].values
+    # Animation function for the first graph - PM2.5 vs time
 
-    fig, ax = plt.subplots(figsize=(12, 4))
+    # Group data by date and calculating the daily average PM2.5 concentration
+    daily = df.groupby("Date")["PM2.5"].mean().reset_index()
+    # Extracting date values for X-Axis
+    dates = daily["Date"].values
+    # Extracting PM2.5 values for Y-Axis
+    pollutant = daily["PM2.5"].values
+    # Set figure size
+    fig, ax = plt.subplots(figsize=(10, 4))
+    # Set X-Axis span from earliest to latest recorded date in the DataFrame
     ax.set_xlim(min(dates), max(dates))
-    ax.set_ylim(min(scores) - 1, max(scores) + 2)
+    # Add margin to the Y-Axis (-1 from min and +2 from max) so that the graph doesn't touch the edges of the plot
+    ax.set_ylim(min(pollutant) - 1, max(pollutant) + 2)
+    # Axis titles
     ax.set_xlabel("Date")
     ax.set_ylabel("PM2.5")
+    # Create an empty line object that will be animated
     line, = ax.plot([], [], '-')
 
-    print(line)
-
-    def animate(i):
+    def animate(i): # 'i' is the frame number
+    # Set X coordinates from the start to current frame
         x = dates[:i + 1]
-        y = scores[:i + 1]
+    # Set Y coordinates for corresponding PM2.5 values
+        y = pollutant[:i + 1]
+    # This animates the line graph progressively as the days go by
         line.set_data(x, y)
+    # Title updates to show the day count
         ax.set_title(f"Day {i + 1}")
+    # Return the line object as a single-element tuple
         return line,
 
+    # Animating the figure described above, calling the function for every frame, set number of frames to number of days (1 frame per day), interval of 600 milliseconds between each frame
     anim = animation.FuncAnimation(
         fig, animate, frames=len(dates), interval=600
     )
+    # Display the animation
     plt.show()
+    # Saving the animation as a gif
     anim.save(r"C:\Users\Taixen\PycharmProjects\PythonProject3\PM2.5_animation.gif")
+    # Closing the animation
     plt.close()
 
 
 def export_results(df):
-    # TODO: Save anomalies.csv
-    # TODO: Save summary_by_station.csv
+    # Calling the find_anomalies(df) function to export the created DataFrame as a csv file
     find_anomalies(df).to_csv(
-        r"C:\Users\Taixen\PycharmProjects\PythonProject3\anomalies.csv")  # Saves the find_anomalies(df) function as a csv file on the computer...
+        r"C:\Users\Taixen\PycharmProjects\PythonProject3\anomalies.csv")
+    # Calling the compute_summary(df) function to export the created DataFrame as a csv file
     compute_summary(df).to_csv(
-        r"C:\Users\Taixen\PycharmProjects\PythonProject3\summary_by_station.csv")  # Saves the compute_summary(df) function as a csv file on the computer...
-
+        r"C:\Users\Taixen\PycharmProjects\PythonProject3\summary_by_station.csv")
 
 if __name__ == "__main__":
     df = load_data(path)
