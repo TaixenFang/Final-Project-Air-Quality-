@@ -166,7 +166,7 @@ def make_animation(df):
     # Display the animation
     plt.show()
     # Saving the animation as a gif
-    anim.save(r"C:\Users\Taixen\PycharmProjects\PythonProject3\PM2.5_animation.gif")
+    anim.save(r"C:\Users\Taixen\PycharmProjects\PythonProject3\pm25_animation.gif")
     # Closing the animation
     plt.close()
 
